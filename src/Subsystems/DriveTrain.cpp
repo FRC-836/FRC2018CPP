@@ -4,6 +4,7 @@
 #include <SmartDashboard/SmartDashboard.h>
 
 #include <Talon.h>
+#include <Preferences.h>
 
 static std::shared_ptr<DriveTrain> drive_singleton = nullptr;
 
@@ -29,7 +30,8 @@ DriveTrain::DriveTrain() : frc::Subsystem("DriveTrain") {
 
 	m_Drive = std::make_unique<frc::DifferentialDrive>(*m_LeftGroup, *m_RightGroup);
 	m_Drive->SetSubsystem("DriveTrain");
-	m_Drive->SetMaxOutput(0.85);
+	Preferences *prefs = Preferences::GetInstance();
+	m_Drive->SetMaxOutput(prefs->GetDouble("Max Speed", 0.85));
 
 #ifndef SIMULATION
 	m_leftEnc.SetDistancePerPulse(kDistPerEncPulseDrive);
