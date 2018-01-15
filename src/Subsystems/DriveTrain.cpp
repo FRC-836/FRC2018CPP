@@ -3,7 +3,7 @@
 #include "../Commands/DriveCommand.h"
 #include <SmartDashboard/SmartDashboard.h>
 
-#include <VictorSP.h>
+#include <Talon.h>
 
 static std::shared_ptr<DriveTrain> drive_singleton = nullptr;
 
@@ -17,16 +17,19 @@ std::shared_ptr<DriveTrain> DriveTrain::Get() {
 DriveTrain::DriveTrain() : frc::Subsystem("DriveTrain") {
 
 	for (int i = 0; i < kNumMotorsPerSide; i++) {
-		m_LeftControllers[i] = std::make_shared<frc::VictorSP>(kLeftMotor[i]);
+		m_LeftControllers[i] = std::make_shared<frc::Talon>(kLeftMotor[i]);
 		m_LeftControllers[i]->SetInverted(kLeftMotorInv[i]);
-		m_RightControllers[i] = std::make_shared<frc::VictorSP>(kRightMotor[i]);
+		m_RightControllers[i] = std::make_shared<frc::Talon>(kRightMotor[i]);
 		m_RightControllers[i]->SetInverted(kRightMotorInv[i]);
 	}
 
 	m_LeftGroup = std::make_shared<frc::SpeedControllerGroup>(*(m_LeftControllers[0]), *(m_LeftControllers[1])); //, *(m_LeftControllers[2]));
 	m_RightGroup = std::make_shared<frc::SpeedControllerGroup>(*(m_RightControllers[0]), *(m_RightControllers[1])); //, *(m_RightControllers[2]));
+	//m_LeftGroup->SetInverted(true);
 
 	m_Drive = std::make_unique<frc::DifferentialDrive>(*m_LeftGroup, *m_RightGroup);
+	m_Drive->SetSubsystem("DriveTrain");
+	m_Drive->SetMaxOutput(0.85);
 
 #ifndef SIMULATION
 	m_leftEnc.SetDistancePerPulse(kDistPerEncPulseDrive);

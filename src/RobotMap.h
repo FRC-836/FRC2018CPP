@@ -22,7 +22,7 @@
 constexpr int kNumMotorsPerSide = 2;
 
 constexpr int kLeftMotor[kNumMotorsPerSide] = {1, 0};
-constexpr bool kLeftMotorInv[kNumMotorsPerSide] = { false, false};
+constexpr bool kLeftMotorInv[kNumMotorsPerSide] = { true, true};
 
 constexpr int kRightMotor[kNumMotorsPerSide] = {2, 3};
 constexpr bool kRightMotorInv[kNumMotorsPerSide] = { false, true};

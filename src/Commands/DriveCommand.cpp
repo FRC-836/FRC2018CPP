@@ -15,7 +15,7 @@ void DriveCommand::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void DriveCommand::Execute() {
 	auto& joystick = OI::Get()->GetJoystick();
-	DriveTrain::Get()->Drive(joystick.GetY(frc::GenericHID::JoystickHand::kLeftHand), joystick.GetX(frc::GenericHID::JoystickHand::kRightHand));
+	DriveTrain::Get()->Drive(-joystick.GetY(frc::GenericHID::JoystickHand::kLeftHand), joystick.GetZ());
 }
 
 // Make this return true when this Command no longer needs to run execute()

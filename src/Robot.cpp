@@ -57,13 +57,13 @@ public:
 	 * to the if-else structure below with additional strings & commands.
 	 */
 	void AutonomousInit() override {
-		std::string autoSelected = frc::SmartDashboard::GetString(
+		/*std::string autoSelected = frc::SmartDashboard::GetString(
 				"Auto Selector", "Default");
 		if (autoSelected == "My Auto") {
 			m_autonomousCommand = &m_myAuto;
 		} else {
 			m_autonomousCommand = &m_defaultAuto;
-		}
+		}*/
 
 		m_autonomousCommand = m_chooser.GetSelected();
 
@@ -74,6 +74,7 @@ public:
 
 	void AutonomousPeriodic() override {
 		frc::Scheduler::GetInstance()->Run();
+		m_driveTrain.get()->Log();
 	}
 
 	void TeleopInit() override {
@@ -87,7 +88,10 @@ public:
 		}
 	}
 
-	void TeleopPeriodic() override { frc::Scheduler::GetInstance()->Run(); }
+	void TeleopPeriodic() override {
+		frc::Scheduler::GetInstance()->Run();
+		m_driveTrain.get()->Log();
+	}
 
 	void TestPeriodic() override {}
 
