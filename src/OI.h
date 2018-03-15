@@ -21,4 +21,6 @@ public:
 private:
 
 	frc::Joystick m_joy{0};
+	std::shared_ptr<JoystickButton> m_intakeButton;
+	std::shared_ptr<JoystickButton> m_intakeReverseButton;
 };

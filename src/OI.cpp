@@ -5,9 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+#include <Commands/RunIntakeCommand.h>
+#include <Commands/ReverseIntakeCommand.h>
 #include "OI.h"
 
 #include <WPILib.h>
+#include <RobotMap.h>
 
 static std::shared_ptr<OI> oi_singleton = nullptr;
 
@@ -19,6 +22,12 @@ std::shared_ptr<OI> OI::Get() {
 
 OI::OI() {
 	// Process operator interface input here.
+
+	//m_intakeButton = std::make_shared<JoystickButton>(&m_joy, kIntakeButton);
+	//m_intakeButton->WhileHeld(new RunIntakeCommand());
+
+	//m_intakeButton = std::make_shared<JoystickButton>(&m_joy, kIntakeRevButton);
+	//m_intakeButton->WhileHeld(new ReverseIntakeCommand());
 }
 
 frc::Joystick& OI::GetJoystick() {

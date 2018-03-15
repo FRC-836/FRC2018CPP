@@ -3,8 +3,8 @@
 #include "../Commands/DriveCommand.h"
 #include <SmartDashboard/SmartDashboard.h>
 
-#include <Talon.h>
-#include <Preferences.h>
+#include "ctre/Phoenix.h"
+#include <SmartDashboard/SmartDashboard.h>
 
 static std::shared_ptr<DriveTrain> drive_singleton = nullptr;
 
@@ -18,24 +18,26 @@ std::shared_ptr<DriveTrain> DriveTrain::Get() {
 DriveTrain::DriveTrain() : frc::Subsystem("DriveTrain") {
 
 	for (int i = 0; i < kNumMotorsPerSide; i++) {
-		m_LeftControllers[i] = std::make_shared<frc::Talon>(kLeftMotor[i]);
+		m_LeftControllers[i] = std::make_shared<WPI_VictorSPX>(kLeftMotor[i]);
 		m_LeftControllers[i]->SetInverted(kLeftMotorInv[i]);
-		m_RightControllers[i] = std::make_shared<frc::Talon>(kRightMotor[i]);
+		m_RightControllers[i] = std::make_shared<WPI_VictorSPX>(kRightMotor[i]);
 		m_RightControllers[i]->SetInverted(kRightMotorInv[i]);
 	}
 
-	m_LeftGroup = std::make_shared<frc::SpeedControllerGroup>(*(m_LeftControllers[0]), *(m_LeftControllers[1])); //, *(m_LeftControllers[2]));
-	m_RightGroup = std::make_shared<frc::SpeedControllerGroup>(*(m_RightControllers[0]), *(m_RightControllers[1])); //, *(m_RightControllers[2]));
-	//m_LeftGroup->SetInverted(true);
+	m_LeftGroup = std::make_shared<frc::SpeedControllerGroup>(*(m_LeftControllers[0]), *(m_LeftControllers[1]), *(m_LeftControllers[2]));
+	m_RightGroup = std::make_shared<frc::SpeedControllerGroup>(*(m_RightControllers[0]), *(m_RightControllers[1]), *(m_RightControllers[2]));
 
 	m_Drive = std::make_unique<frc::DifferentialDrive>(*m_LeftGroup, *m_RightGroup);
 	m_Drive->SetSubsystem("DriveTrain");
-	Preferences *prefs = Preferences::GetInstance();
-	m_Drive->SetMaxOutput(prefs->GetDouble("Max Speed", 0.85));
+
+	m_Drive->SetMaxOutput(frc::SmartDashboard::GetNumber("Max Speed", 0.85));
+
 
 #ifndef SIMULATION
 	m_leftEnc.SetDistancePerPulse(kDistPerEncPulseDrive);
+	m_leftEnc.SetReverseDirection(kLeftEncReverse);
 	m_rightEnc.SetDistancePerPulse(kDistPerEncPulseDrive);
+	m_leftEnc.SetReverseDirection(kRightEncReverse);
 #else
 	// Circumference in ft = 4in/12(in/ft)*PI
 	m_leftEnc.SetDistancePerPulse(
